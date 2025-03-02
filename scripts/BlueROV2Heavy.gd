@@ -28,7 +28,7 @@ func connect_fmd_in():
 
 func get_servos():
 	if not peer:
-		interface.set_dest_address("127.0.0.1", interface.get_packet_port())
+		interface.set_dest_address(Globals.SITL_IP, interface.get_packet_port())
 
 	if not interface.get_available_packet_count():
 		if wait_SITL:
@@ -100,7 +100,6 @@ func send_fdm():
 
 
 func get_motors_table_entry(thruster):
-	
 	var thruster_vector = (thruster.transform.basis*Vector3(1,0,0)).normalized()
 	var roll = Vector3(0,0,-1).cross(thruster.translation).normalized().dot(thruster_vector)
 	var pitch = Vector3(1,0,0).cross(thruster.translation).normalized().dot(thruster_vector)

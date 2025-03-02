@@ -81,8 +81,9 @@ func _start_sitl():
 		var binary = File.new()
 		binary.open(\"user://ardusub.exe\", File.READ)
 		print(binary.get_path_absolute())
-		Globals.sitl_pid = OS.execute(binary.get_path_absolute(), [\"-S\",\"--model\",\"JSON\",\"--speedup\",\"1\",\"-I0\",\"--home\",\"33.810313,-118.39386700000001,0.0,270.0\"], false)
-		print(Globals.sitl_pid)
+		var output = []
+		var exit_code = OS.execute(\"wsl\", [\"hostname\", \"-I\"], true, output)
+		Globals.SITL_IP = output[0].strip_edges()
 		add_status(\"SITL is running\")
 		$HBoxContainer/Menu/Buttons.visible = true
 		
@@ -183,9 +184,6 @@ func _ready():
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ViewportContainer" type="ViewportContainer" parent="."]
 anchor_right = 1.0
@@ -293,6 +291,7 @@ text = "Starting...
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="pressed" from="HBoxContainer/Menu/Buttons/poolLevel" to="." method="_on_poolLevel_pressed"]
 [connection signal="pressed" from="HBoxContainer/Menu/Buttons/customLevel" to="." method="_on_customLevel_pressed"]
 [connection signal="toggled" from="HBoxContainer/Menu/CheckBox" to="." method="_on_CheckBox_toggled"]
